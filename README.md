@@ -4,7 +4,7 @@ Service that enables creating new users into a database, and retrieve them whene
 
 ## Documentation
 
-* [HTTP API](docs/api.yml)
+* [HTTP API](cmd/docs/api.yml)
 
 ## Configuration
 
