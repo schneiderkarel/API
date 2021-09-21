@@ -225,7 +225,7 @@ components:
       properties:
         error:
           type: string
-          example: "bad request"
+          example: "invalid request body"
     404StatusNotFound:
       type: object
       required:

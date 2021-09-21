@@ -41,7 +41,7 @@ func TestHandler_HandleUsers(t *testing.T) {
 	}
 	type exp struct {
 		respCode int
-		resBody  string
+		respBody string
 	}
 	tcs := []struct {
 		name string
@@ -59,7 +59,7 @@ func TestHandler_HandleUsers(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusOK,
-				resBody:  `{"users":[{"user_id":"7df661d5-47e3-4533-baa6-5f952d18bffe","name":"John Doe","age":42},{"user_id":"63df08d2-fa53-4575-a681-99058f8daba5","name":"Josh Brave","age":20}]}`,
+				respBody: `{"users":[{"user_id":"7df661d5-47e3-4533-baa6-5f952d18bffe","name":"John Doe","age":42},{"user_id":"63df08d2-fa53-4575-a681-99058f8daba5","name":"Josh Brave","age":20}]}`,
 			},
 		},
 		{
@@ -73,7 +73,7 @@ func TestHandler_HandleUsers(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusInternalServerError,
-				resBody:  ``,
+				respBody: ``,
 			},
 		},
 	}
@@ -90,7 +90,7 @@ func TestHandler_HandleUsers(t *testing.T) {
 			h.HandleUsers(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
-			assert.Equal(t, tc.exp.resBody, rec.Body.String(), "unexpected response body")
+			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
 		})
 	}
 }
@@ -102,7 +102,7 @@ func TestHandler_HandleUser(t *testing.T) {
 	}
 	type exp struct {
 		respCode int
-		resBody  string
+		respBody string
 	}
 	tcs := []struct {
 		name string
@@ -121,7 +121,7 @@ func TestHandler_HandleUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusOK,
-				resBody:  `{"user_id":"7df661d5-47e3-4533-baa6-5f952d18bffe","name":"John Doe","age":42}`,
+				respBody: `{"user_id":"7df661d5-47e3-4533-baa6-5f952d18bffe","name":"John Doe","age":42}`,
 			},
 		},
 		{
@@ -132,7 +132,7 @@ func TestHandler_HandleUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusBadRequest,
-				resBody:  `{"error":"invalid request body"}`,
+				respBody: `{"error":"invalid request body"}`,
 			},
 		},
 		{
@@ -143,7 +143,7 @@ func TestHandler_HandleUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusUnprocessableEntity,
-				resBody:  `{"errors":[{"path":"user_id","message":"invalid UUID length: 3"}]}`,
+				respBody: `{"errors":[{"path":"user_id","message":"invalid UUID length: 3"}]}`,
 			},
 		},
 		{
@@ -158,7 +158,7 @@ func TestHandler_HandleUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusNotFound,
-				resBody:  `{"error":"user not found"}`,
+				respBody: `{"error":"user not found"}`,
 			},
 		},
 		{
@@ -173,7 +173,7 @@ func TestHandler_HandleUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusInternalServerError,
-				resBody:  ``,
+				respBody: ``,
 			},
 		},
 	}
@@ -190,7 +190,7 @@ func TestHandler_HandleUser(t *testing.T) {
 			h.HandleUser(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
-			assert.Equal(t, tc.exp.resBody, rec.Body.String(), "unexpected response body")
+			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
 		})
 	}
 }
@@ -202,7 +202,7 @@ func TestHandler_HandleCreateUser(t *testing.T) {
 	}
 	type exp struct {
 		respCode int
-		resBody  string
+		respBody string
 	}
 	tcs := []struct {
 		name string
@@ -221,7 +221,7 @@ func TestHandler_HandleCreateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusNoContent,
-				resBody:  ``,
+				respBody: ``,
 			},
 		},
 		{
@@ -232,7 +232,7 @@ func TestHandler_HandleCreateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusBadRequest,
-				resBody:  `{"error":"invalid request body"}`,
+				respBody: `{"error":"invalid request body"}`,
 			},
 		},
 		{
@@ -243,7 +243,7 @@ func TestHandler_HandleCreateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusUnprocessableEntity,
-				resBody:  `{"errors":[{"path":"user_id","message":"invalid UUID length: 3"}]}`,
+				respBody: `{"errors":[{"path":"user_id","message":"invalid UUID length: 3"}]}`,
 			},
 		},
 		{
@@ -258,7 +258,7 @@ func TestHandler_HandleCreateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusConflict,
-				resBody:  `{"error":"user already exists"}`,
+				respBody: `{"error":"user already exists"}`,
 			},
 		},
 		{
@@ -273,7 +273,7 @@ func TestHandler_HandleCreateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusInternalServerError,
-				resBody:  ``,
+				respBody: ``,
 			},
 		},
 	}
@@ -290,7 +290,7 @@ func TestHandler_HandleCreateUser(t *testing.T) {
 			h.HandleCreateUser(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
-			assert.Equal(t, tc.exp.resBody, rec.Body.String(), "unexpected response body")
+			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
 		})
 	}
 }
@@ -302,7 +302,7 @@ func TestHandler_HandleUpdateUser(t *testing.T) {
 	}
 	type exp struct {
 		respCode int
-		resBody  string
+		respBody string
 	}
 	tcs := []struct {
 		name string
@@ -321,7 +321,7 @@ func TestHandler_HandleUpdateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusNoContent,
-				resBody:  ``,
+				respBody: ``,
 			},
 		},
 		{
@@ -332,7 +332,7 @@ func TestHandler_HandleUpdateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusBadRequest,
-				resBody:  `{"error":"invalid request body"}`,
+				respBody: `{"error":"invalid request body"}`,
 			},
 		},
 		{
@@ -343,7 +343,7 @@ func TestHandler_HandleUpdateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusUnprocessableEntity,
-				resBody:  `{"errors":[{"path":"user_id","message":"invalid UUID length: 3"}]}`,
+				respBody: `{"errors":[{"path":"user_id","message":"invalid UUID length: 3"}]}`,
 			},
 		},
 		{
@@ -358,7 +358,7 @@ func TestHandler_HandleUpdateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusNotFound,
-				resBody:  `{"error":"user not found"}`,
+				respBody: `{"error":"user not found"}`,
 			},
 		},
 		{
@@ -373,7 +373,7 @@ func TestHandler_HandleUpdateUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusInternalServerError,
-				resBody:  ``,
+				respBody: ``,
 			},
 		},
 	}
@@ -390,7 +390,7 @@ func TestHandler_HandleUpdateUser(t *testing.T) {
 			h.HandleUpdateUser(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
-			assert.Equal(t, tc.exp.resBody, rec.Body.String(), "unexpected response body")
+			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
 		})
 	}
 }
@@ -402,7 +402,7 @@ func TestHandler_HandleDeleteUser(t *testing.T) {
 	}
 	type exp struct {
 		respCode int
-		resBody  string
+		respBody string
 	}
 	tcs := []struct {
 		name string
@@ -421,7 +421,7 @@ func TestHandler_HandleDeleteUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusNoContent,
-				resBody:  ``,
+				respBody: ``,
 			},
 		},
 		{
@@ -432,7 +432,7 @@ func TestHandler_HandleDeleteUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusBadRequest,
-				resBody:  `{"error":"invalid request body"}`,
+				respBody: `{"error":"invalid request body"}`,
 			},
 		},
 		{
@@ -443,7 +443,7 @@ func TestHandler_HandleDeleteUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusUnprocessableEntity,
-				resBody:  `{"errors":[{"path":"user_id","message":"invalid UUID length: 3"}]}`,
+				respBody: `{"errors":[{"path":"user_id","message":"invalid UUID length: 3"}]}`,
 			},
 		},
 		{
@@ -458,7 +458,7 @@ func TestHandler_HandleDeleteUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusNotFound,
-				resBody:  `{"error":"user not found"}`,
+				respBody: `{"error":"user not found"}`,
 			},
 		},
 		{
@@ -473,7 +473,7 @@ func TestHandler_HandleDeleteUser(t *testing.T) {
 			},
 			exp: exp{
 				respCode: http.StatusInternalServerError,
-				resBody:  ``,
+				respBody: ``,
 			},
 		},
 	}
@@ -490,7 +490,7 @@ func TestHandler_HandleDeleteUser(t *testing.T) {
 			h.HandleDeleteUser(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
-			assert.Equal(t, tc.exp.resBody, rec.Body.String(), "unexpected response body")
+			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
 		})
 	}
 }

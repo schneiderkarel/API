@@ -42,7 +42,7 @@ func TestWriteNotFoundError(t *testing.T) {
 func TestWriteConflictError(t *testing.T) {
 	res := httptest.NewRecorder()
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		WriteConflictError("conflict-error", w)
+		WriteConflictError("conflict", w)
 	})
 
 	req, err := http.NewRequest(http.MethodPost, "", strings.NewReader(""))
@@ -92,7 +92,9 @@ func TestWriteJson(t *testing.T) {
 				expCode,
 				struct {
 					Status string `json:"status"`
-				}{Status: "error"},
+				}{
+					Status: "error",
+				},
 				w,
 			)
 		})
