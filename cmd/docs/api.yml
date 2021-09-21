@@ -1,0 +1,264 @@
+openapi: 3.0.0
+info:
+  title: User service
+  description: User service
+  version: "0.1"
+tags:
+  - name: User service
+paths:
+  /users:
+    post:
+      tags: [Users]
+      summary: Retrieve all users
+      operationId: Users
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        500:
+          description: Internal Server Error
+  /user:
+    post:
+      tags: [User]
+      summary: Retrieve just one user that matches user_id in request body
+      operationId: User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+              properties:
+                user_id:
+                  $ref: "#/components/schemas/UserId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Status Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400StatusBadRequest"
+        404:
+          description: Status Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404StatusNotFound"
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/422UnprocessableEntity"
+        500:
+          description: Internal Server Error
+  /create-user:
+    post:
+      tags: [User]
+      summary: Retrieve just one user that matches user_id in request body
+      operationId: CreateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        204:
+          description: Status No Content
+        400:
+          description: Status Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400StatusBadRequest"
+        409:
+          description: Status Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/409StatusConflict"
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/422UnprocessableEntity"
+        500:
+          description: Internal Server Error
+  /update-user:
+    post:
+      tags: [User]
+      summary: Update user information based on given user_id in request body
+      operationId: UpdateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        204:
+          description: Status No Content
+        400:
+          description: Status Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400StatusBadRequest"
+        404:
+          description: Status Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404StatusNotFound"
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/422UnprocessableEntity"
+        500:
+          description: Internal Server Error
+  /delete-user:
+    post:
+      tags: [User]
+      summary: Delete user based on given user_id
+      operationId: DeleteUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+              properties:
+                user_id:
+                  $ref: "#/components/schemas/UserId"
+      responses:
+        204:
+          description: Status No Content
+        400:
+          description: Status Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400StatusBadRequest"
+        404:
+          description: Status Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404StatusNotFound"
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/422UnprocessableEntity"
+        500:
+          description: Internal Server Error
+components:
+  schemas:
+    Users:
+      type: object
+      nullable: true
+      required: [ users ]
+      properties:
+        users:
+          type: array
+          items:
+            type: object
+            required:
+              - user_id
+              - name
+              - age
+            properties:
+              user_id:
+                $ref: "#/components/schemas/UserId"
+              name:
+                $ref: "#/components/schemas/Name"
+              age:
+                $ref: "#/components/schemas/Age"
+    User:
+      type: object
+      required:
+        - user_id
+        - name
+        - age
+      properties:
+        user_id:
+          $ref: "#/components/schemas/UserId"
+        name:
+          $ref: "#/components/schemas/Name"
+        age:
+          $ref: "#/components/schemas/Age"
+    UserId:
+      type: string
+      format: uuid
+      example: "04d936ec-dfc3-4ad2-9d10-3797ea747e0a"
+    Name:
+      type: string
+      minLength: 4
+      maxLength: 100
+      example: "user-1"
+    Age:
+      type: integer
+      minLength: 1
+      example: 4
+    400StatusBadRequest:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: "bad request"
+    404StatusNotFound:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: "user not found"
+    409StatusConflict:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: "user already exists"
+    422UnprocessableEntity:
+      type: object
+      required: [ errors ]
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - path
+              - message
+            properties:
+              path:
+                description: Location where the error was
+                type: string
+                example: "user_id"
+              message:
+                description: Location where the error was
+                type: string
+                example: "invalid UUID format"

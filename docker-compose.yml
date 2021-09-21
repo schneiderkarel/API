@@ -1,0 +1,42 @@
+version: '3.7'
+
+networks:
+  default:
+    external: true
+    name: local-network
+
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: cmd/docker/local/Dockerfile
+    container_name: user-service
+    volumes:
+      - .:/app
+    environment:
+      HTTP_SERVER_PORT: "8080"
+      POSTGRES_DSN: "host=postgres port=5432 user=postgres dbname=postgres sslmode=disable"
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+
+  postgres:
+    image: postgres:10.6-alpine
+    container_name: postgres
+    ports:
+      - 5432:5432
+
+  migrate-up:
+    image: migrate/migrate
+    container_name: migrate-up
+    volumes:
+      - ./sql/src:/migrations
+    command: [ "-path", "/migrations/", "-database",  "postgres://postgres@postgres:5432/?sslmode=disable", "up" ]
+
+  migrate-down:
+    image: migrate/migrate
+    container_name: migrate-down
+    volumes:
+      - ./sql/src:/migrations
+    command: [ "-path", "/migrations/", "-database",  "postgres://postgres@postgres:5432/?sslmode=disable", "down", "-all" ]
