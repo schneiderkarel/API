@@ -18,16 +18,14 @@ const (
 
 func TestNewRouter(t *testing.T) {
 	bh := &baseHandlerMock{}
-	router := NewRouter(
-		bh,
-	)
+	router := NewRouter(bh)
 
 	type args struct {
 		method string
 		url    string
 	}
 	type exp struct {
-		resBody string
+		respBody string
 	}
 	okTcs := []struct {
 		name string
@@ -41,7 +39,7 @@ func TestNewRouter(t *testing.T) {
 				url:    "/users",
 			},
 			exp: exp{
-				resBody: expResponseBodyUsers,
+				respBody: expResponseBodyUsers,
 			},
 		},
 		{
@@ -51,7 +49,7 @@ func TestNewRouter(t *testing.T) {
 				url:    "/user",
 			},
 			exp: exp{
-				resBody: expResponseBodyUser,
+				respBody: expResponseBodyUser,
 			},
 		},
 		{
@@ -61,7 +59,7 @@ func TestNewRouter(t *testing.T) {
 				url:    "/create-user",
 			},
 			exp: exp{
-				resBody: expResponseBodyCreateUser,
+				respBody: expResponseBodyCreateUser,
 			},
 		},
 		{
@@ -71,7 +69,7 @@ func TestNewRouter(t *testing.T) {
 				url:    "/update-user",
 			},
 			exp: exp{
-				resBody: expResponseBodyUpdateUser,
+				respBody: expResponseBodyUpdateUser,
 			},
 		},
 		{
@@ -81,7 +79,7 @@ func TestNewRouter(t *testing.T) {
 				url:    "/delete-user",
 			},
 			exp: exp{
-				resBody: expResponseBodyDeleteUser,
+				respBody: expResponseBodyDeleteUser,
 			},
 		},
 	}
@@ -95,7 +93,7 @@ func TestNewRouter(t *testing.T) {
 			router.ServeHTTP(rec, req)
 
 			assert.Equal(t, http.StatusOK, rec.Code, "unexpected response code")
-			assert.Equal(t, tc.exp.resBody, rec.Body.String(), "unexpected response body")
+			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
 		})
 	}
 

@@ -68,7 +68,7 @@ func TestStorage_Users(t *testing.T) {
 		assert.Nil(t, res)
 	})
 
-	t.Run("db error", func(t *testing.T) {
+	t.Run("database error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
 		defer db.Close()
@@ -100,7 +100,7 @@ func TestStorage_User(t *testing.T) {
 		assert.Equal(t, user1, user)
 	})
 
-	t.Run("db error", func(t *testing.T) {
+	t.Run("database error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
 		defer db.Close()
@@ -115,7 +115,7 @@ func TestStorage_User(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	t.Run("not found error", func(t *testing.T) {
+	t.Run("user not found error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
 		defer db.Close()
@@ -145,7 +145,7 @@ func TestStorage_CreateUser(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	t.Run("entry already exists", func(t *testing.T) {
+	t.Run("user already exists error", func(t *testing.T) {
 		expErr := errors.New(`pq: duplicate key value violates unique constraint "user_id_pk"`)
 
 		db, mock, err := sqlmock.New()
@@ -162,7 +162,7 @@ func TestStorage_CreateUser(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	t.Run("db error", func(t *testing.T) {
+	t.Run("database error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
 		defer db.Close()
@@ -192,7 +192,7 @@ func TestStorage_UpdateUser(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	t.Run("user not found", func(t *testing.T) {
+	t.Run("user not found error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
 		defer db.Close()
@@ -218,7 +218,7 @@ func TestStorage_UpdateUser(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	t.Run("db error", func(t *testing.T) {
+	t.Run("database error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
 		defer db.Close()
@@ -246,7 +246,7 @@ func TestStorage_DeleteUser(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	t.Run("user not found", func(t *testing.T) {
+	t.Run("user not found error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
 		defer db.Close()
@@ -272,7 +272,7 @@ func TestStorage_DeleteUser(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	t.Run("db error", func(t *testing.T) {
+	t.Run("database error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
 		defer db.Close()

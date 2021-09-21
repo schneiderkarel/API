@@ -42,7 +42,9 @@ type storage struct {
 }
 
 func NewUserStorage(db *sql.DB) UserStorage {
-	return &storage{db: db}
+	return &storage{
+		db: db,
+	}
 }
 
 func (st *storage) Users() ([]User, error) {
@@ -53,13 +55,17 @@ func (st *storage) Users() ([]User, error) {
 		return nil, err
 	}
 
-	var u User
+	var usr User
 	for rows.Next() {
-		if err := rows.Scan(&u.UserId, &u.Name, &u.Age); err != nil {
+		if err := rows.Scan(
+			&usr.UserId,
+			&usr.Name,
+			&usr.Age,
+		); err != nil {
 			return nil, err
 		}
 
-		users = append(users, u)
+		users = append(users, usr)
 	}
 
 	return users, err
@@ -69,7 +75,11 @@ func (st *storage) User(userId string) (User, error) {
 	row := st.db.QueryRow(selectUserSQL, userId)
 
 	var usr User
-	if err := row.Scan(&usr.UserId, &usr.Name, &usr.Age); err != nil {
+	if err := row.Scan(
+		&usr.UserId,
+		&usr.Name,
+		&usr.Age,
+	); err != nil {
 		if err == sql.ErrNoRows {
 			return User{}, UserNotFoundErr
 		}

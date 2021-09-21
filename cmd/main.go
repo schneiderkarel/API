@@ -27,12 +27,10 @@ func main() {
 		log.Printf("cannot ping postgres connection: error - %s", err.Error())
 	}
 
-	userStorage := storage.NewUserStorage(db)
-
 	wg := &sync.WaitGroup{}
 
 	addToWaitGroup(wg, func() {
-		httpserver.Run(cfg.HttpServerPort, userStorage)
+		httpserver.Run(cfg.HttpServerPort, storage.NewUserStorage(db))
 	})
 
 	wg.Wait()
