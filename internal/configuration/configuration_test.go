@@ -1,9 +1,10 @@
 package configuration
 
 import (
-	errs "app/internal/errors"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"app/internal/response"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUserIdentifierRequest_Validate(t *testing.T) {
@@ -11,7 +12,7 @@ func TestUserIdentifierRequest_Validate(t *testing.T) {
 		usr UserIdentifierRequest
 	}
 	type exp struct {
-		errors []errs.ValidationError
+		errors []response.ValidationError
 	}
 	tcs := []struct {
 		name string
@@ -37,7 +38,7 @@ func TestUserIdentifierRequest_Validate(t *testing.T) {
 				},
 			},
 			exp: exp{
-				errors: []errs.ValidationError{
+				errors: []response.ValidationError{
 					{
 						Path:    "user_id",
 						Message: "invalid UUID format",
@@ -53,7 +54,7 @@ func TestUserIdentifierRequest_Validate(t *testing.T) {
 				},
 			},
 			exp: exp{
-				errors: []errs.ValidationError{
+				errors: []response.ValidationError{
 					{
 						Path:    "user_id",
 						Message: "invalid UUID length: 35",
@@ -69,7 +70,7 @@ func TestUserIdentifierRequest_Validate(t *testing.T) {
 				},
 			},
 			exp: exp{
-				errors: []errs.ValidationError{
+				errors: []response.ValidationError{
 					{
 						Path:    "user_id",
 						Message: "invalid UUID length: 37",
@@ -91,7 +92,7 @@ func TestUserRequest_Validate(t *testing.T) {
 		usr UserRequest
 	}
 	type exp struct {
-		errors []errs.ValidationError
+		errors []response.ValidationError
 	}
 	tcs := []struct {
 		name string
@@ -121,7 +122,7 @@ func TestUserRequest_Validate(t *testing.T) {
 				},
 			},
 			exp: exp{
-				errors: []errs.ValidationError{
+				errors: []response.ValidationError{
 					{
 						Path:    "user_id",
 						Message: "invalid UUID format",
@@ -139,7 +140,7 @@ func TestUserRequest_Validate(t *testing.T) {
 				},
 			},
 			exp: exp{
-				errors: []errs.ValidationError{
+				errors: []response.ValidationError{
 					{
 						Path:    "user_id",
 						Message: "invalid UUID length: 35",
@@ -165,7 +166,7 @@ func TestUserRequest_Validate(t *testing.T) {
 				},
 			},
 			exp: exp{
-				errors: []errs.ValidationError{
+				errors: []response.ValidationError{
 					{
 						Path:    "user_id",
 						Message: "invalid UUID length: 37",

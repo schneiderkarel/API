@@ -1,16 +1,16 @@
 package httpserver
 
 import (
-	"app/internal/configuration"
-	"app/internal/storage"
 	"errors"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"math"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"app/internal/configuration"
+	"app/internal/storage"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -27,15 +27,15 @@ var (
 	}
 )
 
-func TestNewHandler(t *testing.T) {
+func Test_newHandler(t *testing.T) {
 	expHandler := &handler{
 		ust: userStorageMock{},
 	}
 
-	assert.Equal(t, expHandler, NewHandler(userStorageMock{}))
+	assert.Equal(t, expHandler, newHandler(userStorageMock{}))
 }
 
-func TestHandler_HandleUsers(t *testing.T) {
+func TestHandler_Users(t *testing.T) {
 	type args struct {
 		ust storage.UserStorage
 	}
@@ -85,9 +85,9 @@ func TestHandler_HandleUsers(t *testing.T) {
 
 			rec := httptest.NewRecorder()
 
-			h := NewHandler(tc.args.ust)
+			h := newHandler(tc.args.ust)
 
-			h.HandleUsers(rec, req)
+			h.Users(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
 			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
@@ -95,7 +95,7 @@ func TestHandler_HandleUsers(t *testing.T) {
 	}
 }
 
-func TestHandler_HandleUser(t *testing.T) {
+func TestHandler_User(t *testing.T) {
 	type args struct {
 		reqBody string
 		ust     storage.UserStorage
@@ -185,9 +185,9 @@ func TestHandler_HandleUser(t *testing.T) {
 
 			rec := httptest.NewRecorder()
 
-			h := NewHandler(tc.args.ust)
+			h := newHandler(tc.args.ust)
 
-			h.HandleUser(rec, req)
+			h.User(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
 			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
@@ -195,7 +195,7 @@ func TestHandler_HandleUser(t *testing.T) {
 	}
 }
 
-func TestHandler_HandleCreateUser(t *testing.T) {
+func TestHandler_CreateUser(t *testing.T) {
 	type args struct {
 		reqBody string
 		ust     storage.UserStorage
@@ -285,9 +285,9 @@ func TestHandler_HandleCreateUser(t *testing.T) {
 
 			rec := httptest.NewRecorder()
 
-			h := NewHandler(tc.args.ust)
+			h := newHandler(tc.args.ust)
 
-			h.HandleCreateUser(rec, req)
+			h.CreateUser(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
 			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
@@ -295,7 +295,7 @@ func TestHandler_HandleCreateUser(t *testing.T) {
 	}
 }
 
-func TestHandler_HandleUpdateUser(t *testing.T) {
+func TestHandler_UpdateUser(t *testing.T) {
 	type args struct {
 		reqBody string
 		ust     storage.UserStorage
@@ -385,9 +385,9 @@ func TestHandler_HandleUpdateUser(t *testing.T) {
 
 			rec := httptest.NewRecorder()
 
-			h := NewHandler(tc.args.ust)
+			h := newHandler(tc.args.ust)
 
-			h.HandleUpdateUser(rec, req)
+			h.UpdateUser(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
 			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
@@ -395,7 +395,7 @@ func TestHandler_HandleUpdateUser(t *testing.T) {
 	}
 }
 
-func TestHandler_HandleDeleteUser(t *testing.T) {
+func TestHandler_DeleteUser(t *testing.T) {
 	type args struct {
 		reqBody string
 		ust     storage.UserStorage
@@ -485,9 +485,9 @@ func TestHandler_HandleDeleteUser(t *testing.T) {
 
 			rec := httptest.NewRecorder()
 
-			h := NewHandler(tc.args.ust)
+			h := newHandler(tc.args.ust)
 
-			h.HandleDeleteUser(rec, req)
+			h.DeleteUser(rec, req)
 
 			assert.Equal(t, tc.exp.respCode, rec.Code, "unexpected response code")
 			assert.Equal(t, tc.exp.respBody, rec.Body.String(), "unexpected response body")
@@ -495,7 +495,7 @@ func TestHandler_HandleDeleteUser(t *testing.T) {
 	}
 }
 
-func TestParseRequestBody(t *testing.T) {
+func Test_parseRequestBody(t *testing.T) {
 	type args struct {
 		reqBody string
 	}
@@ -558,60 +558,12 @@ func TestParseRequestBody(t *testing.T) {
 
 			rec := httptest.NewRecorder()
 
-			assert.Equal(t, tc.exp.result, ParseRequestBody(rec, req, &rb))
+			assert.Equal(t, tc.exp.result, parseRequestBody(rec, req, &rb))
 			assert.Equal(t, tc.exp.code, rec.Code)
 			assert.Equal(t, tc.exp.respBody, rec.Body.String())
 			assert.Equal(t, tc.exp.body, rb)
 		})
 	}
-}
-
-func TestWriteJson(t *testing.T) {
-	t.Run("ok", func(t *testing.T) {
-		expCode := 499
-
-		res := httptest.NewRecorder()
-		handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			WriteJson(
-				expCode,
-				struct {
-					Status string `json:"status"`
-				}{Status: "error"},
-				w,
-			)
-		})
-
-		req, err := http.NewRequest(http.MethodPost, "", strings.NewReader(""))
-		require.NoError(t, err)
-
-		handler.ServeHTTP(res, req)
-
-		assert.Equal(t, expCode, res.Code, "unexpected code")
-		assert.Equal(t, HeaderContentTypeJson, res.Header().Get(HeaderContentType), "unexpected content type")
-		assert.Equal(t, `{"status":"error"}`, res.Body.String(), "unexpected body")
-	})
-
-	t.Run("marshal error", func(t *testing.T) {
-		res := httptest.NewRecorder()
-		handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			WriteJson(
-				499,
-				struct {
-					Status float64 `json:"status"`
-				}{Status: math.Inf(1)},
-				w,
-			)
-		})
-
-		req, err := http.NewRequest(http.MethodPost, "", strings.NewReader(""))
-		require.NoError(t, err)
-
-		handler.ServeHTTP(res, req)
-
-		assert.Equal(t, http.StatusInternalServerError, res.Code, "unexpected code")
-		assert.Equal(t, "", res.Header().Get(HeaderContentType), "unexpected content type")
-		assert.Equal(t, "", res.Body.String(), "unexpected body")
-	})
 }
 
 type userStorageMock struct {

@@ -2,17 +2,31 @@ package storage
 
 import (
 	"database/sql"
+	_ "embed"
 	"errors"
 	"strings"
 )
 
-const (
-	selectUsersSQL = `SELECT user_id, "name", age FROM user_service.users`
-	selectUserSQL  = `SELECT user_id, "name", age FROM user_service.users WHERE user_id = $1`
-	insertUserSQL  = `INSERT INTO user_service.users (user_id, "name", age) VALUES ($1, $2, $3)`
-	updateUserSQL  = `UPDATE user_service.users SET "name" = $2, age = $3 WHERE user_id = $1`
-	deleteUserSQL  = `DELETE FROM user_service.users WHERE user_id = $1`
+var (
+	//go:embed queries/select_users_query.sql
+	selectUsersSQL string
+	//go:embed queries/select_user_query.sql
+	selectUserSQL string
+	//go:embed queries/insert_user_query.sql
+	insertUserSQL string
+	//go:embed queries/update_user_query.sql
+	updateUserSQL string
+	//go:embed queries/delete_user_query.sql
+	deleteUserSQL string
 )
+
+type UserStorage interface {
+	Users() ([]User, error)
+	User(userId string) (User, error)
+	CreateUser(usr User) error
+	UpdateUser(usr User) error
+	DeleteUser(userId string) error
+}
 
 var (
 	UserAlreadyExistsErr = errors.New("user already exists")
@@ -29,14 +43,6 @@ type UsersResponse struct {
 	Users []User `json:"users"`
 }
 
-type UserStorage interface {
-	Users() ([]User, error)
-	User(userId string) (User, error)
-	CreateUser(usr User) error
-	UpdateUser(usr User) error
-	DeleteUser(userId string) error
-}
-
 type storage struct {
 	db *sql.DB
 }
@@ -48,15 +54,16 @@ func NewUserStorage(db *sql.DB) UserStorage {
 }
 
 func (st *storage) Users() ([]User, error) {
-	var users []User
+	users := make([]User, 0)
 
 	rows, err := st.db.Query(selectUsersSQL)
 	if err != nil {
 		return nil, err
 	}
 
-	var usr User
 	for rows.Next() {
+		var usr User
+
 		if err := rows.Scan(
 			&usr.UserId,
 			&usr.Name,
@@ -75,12 +82,13 @@ func (st *storage) User(userId string) (User, error) {
 	row := st.db.QueryRow(selectUserSQL, userId)
 
 	var usr User
+
 	if err := row.Scan(
 		&usr.UserId,
 		&usr.Name,
 		&usr.Age,
 	); err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return User{}, UserNotFoundErr
 		}
 

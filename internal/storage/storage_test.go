@@ -3,11 +3,12 @@ package storage
 import (
 	"database/sql"
 	"errors"
+	"regexp"
+	"testing"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"regexp"
-	"testing"
 )
 
 var (
@@ -50,6 +51,22 @@ func TestStorage_Users(t *testing.T) {
 
 		assert.NoError(t, err)
 		assert.Equal(t, []User{user1, user2}, users)
+	})
+
+	t.Run("ok empty", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		require.NoError(t, err)
+		defer db.Close()
+
+		rows := sqlmock.NewRows([]string{"id", "name", "age"})
+		mock.ExpectQuery(regexp.QuoteMeta(selectUsersSQL)).WillReturnRows(rows)
+
+		s := NewUserStorage(db)
+
+		users, err := s.Users()
+
+		assert.NoError(t, err)
+		assert.Equal(t, []User{}, users)
 	})
 
 	t.Run("scan error", func(t *testing.T) {

@@ -1,4 +1,4 @@
-package errors
+package response
 
 import (
 	"encoding/json"
@@ -10,6 +10,22 @@ const (
 	headerContentType     = "Content-Type"
 	headerContentTypeJson = "application/json"
 )
+
+func WriteJson(statusCode int, body interface{}, w http.ResponseWriter) {
+	content, err := json.Marshal(body)
+	if err != nil {
+		WriteInternalServerError(err, w)
+		return
+	}
+
+	w.Header().Set(headerContentType, headerContentTypeJson)
+	w.WriteHeader(statusCode)
+
+	if _, err := w.Write(content); err != nil {
+		WriteInternalServerError(err, w)
+		log.Printf("unable to write http response - error: %s", err.Error())
+	}
+}
 
 type badRequestError struct {
 	Error string `json:"error"`
@@ -51,20 +67,4 @@ func WriteUnprocessableEntitiesError(vErrs []ValidationError, w http.ResponseWri
 func WriteInternalServerError(err error, w http.ResponseWriter) {
 	log.Printf("internal server error - %s", err.Error())
 	w.WriteHeader(http.StatusInternalServerError)
-}
-
-func WriteJson(statusCode int, body interface{}, w http.ResponseWriter) {
-	content, err := json.Marshal(body)
-	if err != nil {
-		WriteInternalServerError(err, w)
-		return
-	}
-
-	w.Header().Set(headerContentType, headerContentTypeJson)
-	w.WriteHeader(statusCode)
-
-	if _, err := w.Write(content); err != nil {
-		WriteInternalServerError(err, w)
-		log.Printf("unable to write http response - error: %s", err.Error())
-	}
 }
