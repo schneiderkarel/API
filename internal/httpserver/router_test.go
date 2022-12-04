@@ -2,10 +2,11 @@ package httpserver
 
 import (
 	"bytes"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -16,9 +17,9 @@ const (
 	expResponseBodyDeleteUser = "delete-user OK"
 )
 
-func TestNewRouter(t *testing.T) {
+func Test_newRouter(t *testing.T) {
 	bh := &baseHandlerMock{}
-	router := NewRouter(bh)
+	router := newRouter(bh)
 
 	type args struct {
 		method string
@@ -120,23 +121,23 @@ func TestNewRouter(t *testing.T) {
 
 type baseHandlerMock struct{}
 
-func (bh *baseHandlerMock) HandleUsers(w http.ResponseWriter, r *http.Request) {
+func (bh *baseHandlerMock) Users(w http.ResponseWriter, r *http.Request) {
 	bh.write(w, expResponseBodyUsers)
 }
 
-func (bh *baseHandlerMock) HandleUser(w http.ResponseWriter, r *http.Request) {
+func (bh *baseHandlerMock) User(w http.ResponseWriter, r *http.Request) {
 	bh.write(w, expResponseBodyUser)
 }
 
-func (bh *baseHandlerMock) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
+func (bh *baseHandlerMock) CreateUser(w http.ResponseWriter, r *http.Request) {
 	bh.write(w, expResponseBodyCreateUser)
 }
 
-func (bh *baseHandlerMock) HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
+func (bh *baseHandlerMock) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	bh.write(w, expResponseBodyUpdateUser)
 }
 
-func (bh *baseHandlerMock) HandleDeleteUser(w http.ResponseWriter, r *http.Request) {
+func (bh *baseHandlerMock) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	bh.write(w, expResponseBodyDeleteUser)
 }
 

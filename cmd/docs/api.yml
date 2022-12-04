@@ -20,6 +20,7 @@ paths:
                 $ref: "#/components/schemas/Users"
         500:
           description: Internal Server Error
+
   /user:
     post:
       tags: [User]
@@ -63,6 +64,7 @@ paths:
                 $ref: "#/components/schemas/422UnprocessableEntity"
         500:
           description: Internal Server Error
+
   /create-user:
     post:
       tags: [User]
@@ -97,6 +99,7 @@ paths:
                 $ref: "#/components/schemas/422UnprocessableEntity"
         500:
           description: Internal Server Error
+
   /update-user:
     post:
       tags: [User]
@@ -131,6 +134,7 @@ paths:
                 $ref: "#/components/schemas/422UnprocessableEntity"
         500:
           description: Internal Server Error
+
   /delete-user:
     post:
       tags: [User]
@@ -170,6 +174,7 @@ paths:
                 $ref: "#/components/schemas/422UnprocessableEntity"
         500:
           description: Internal Server Error
+
 components:
   schemas:
     Users:

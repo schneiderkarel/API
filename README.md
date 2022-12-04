@@ -24,7 +24,12 @@ modified):
 ```
 make up
 ```
-* This command creates application environment, and starts the app. 
+* This command creates application environment.
+
+```
+docker-compose up --build user-service
+```
+* This command runs the app in a docker container.
 
 The service runs on _localhost_.
 
@@ -37,4 +42,4 @@ make down
 ### Without Docker
 
 To run the app server, or the tests during development use the built-in functions in your IDE with Go installed locally
-and environment variables set according to `docker-compose.yml`.
+and set environment variables according to `docker-compose.yml`.
