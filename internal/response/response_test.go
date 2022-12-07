@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestWriteBadRequestError(t *testing.T) {
+func Test_WriteBadRequestError(t *testing.T) {
 	res := httptest.NewRecorder()
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		WriteBadRequestError("bad-request", w)
@@ -40,7 +40,7 @@ func TestWriteNotFoundError(t *testing.T) {
 	assert.Equal(t, http.StatusNotFound, res.Code)
 }
 
-func TestWriteConflictError(t *testing.T) {
+func Test_WriteConflictError(t *testing.T) {
 	res := httptest.NewRecorder()
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		WriteConflictError("conflict", w)
@@ -54,7 +54,7 @@ func TestWriteConflictError(t *testing.T) {
 	assert.Equal(t, http.StatusConflict, res.Code)
 }
 
-func TestWriteUnprocessableEntitiesError(t *testing.T) {
+func Test_WriteUnprocessableEntitiesError(t *testing.T) {
 	res := httptest.NewRecorder()
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		WriteUnprocessableEntitiesError([]ValidationError{}, w)
@@ -68,7 +68,7 @@ func TestWriteUnprocessableEntitiesError(t *testing.T) {
 	assert.Equal(t, http.StatusUnprocessableEntity, res.Code)
 }
 
-func TestWriteInternalServerError(t *testing.T) {
+func Test_WriteInternalServerError(t *testing.T) {
 	res := httptest.NewRecorder()
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		WriteInternalServerError(errors.New("an error"), w)
@@ -83,7 +83,7 @@ func TestWriteInternalServerError(t *testing.T) {
 	assert.Equal(t, "", res.Body.String())
 }
 
-func TestWriteJson(t *testing.T) {
+func Test_WriteJson(t *testing.T) {
 	t.Run("ok", func(t *testing.T) {
 		expCode := 499
 

@@ -12,8 +12,7 @@ type UserIdentifierRequest struct {
 func (usr *UserIdentifierRequest) Validate() []response.ValidationError {
 	var vErrs []response.ValidationError
 
-	_, err := uuid.Parse(usr.UserId)
-	if err != nil {
+	if _, err := uuid.Parse(usr.UserId); err != nil {
 		vErrs = append(vErrs, response.ValidationError{Path: "user_id", Message: err.Error()})
 	}
 
@@ -29,8 +28,7 @@ type UserRequest struct {
 func (usr *UserRequest) Validate() []response.ValidationError {
 	var vErrs []response.ValidationError
 
-	_, err := uuid.Parse(usr.UserId)
-	if err != nil {
+	if _, err := uuid.Parse(usr.UserId); err != nil {
 		vErrs = append(vErrs, response.ValidationError{Path: "user_id", Message: err.Error()})
 	}
 

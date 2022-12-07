@@ -2,6 +2,7 @@ package response
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -23,7 +24,7 @@ func WriteJson(statusCode int, body interface{}, w http.ResponseWriter) {
 
 	if _, err := w.Write(content); err != nil {
 		WriteInternalServerError(err, w)
-		log.Printf("unable to write http response - error: %s", err.Error())
+		log.Println(fmt.Errorf("unable to write http response - error: %s", err))
 	}
 }
 
@@ -65,6 +66,6 @@ func WriteUnprocessableEntitiesError(vErrs []ValidationError, w http.ResponseWri
 }
 
 func WriteInternalServerError(err error, w http.ResponseWriter) {
-	log.Printf("internal server error - %s", err.Error())
+	log.Println(fmt.Errorf("internal server error - %s", err))
 	w.WriteHeader(http.StatusInternalServerError)
 }

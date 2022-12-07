@@ -33,7 +33,7 @@ func (s *server) Run() error {
 	log.Println("http server successfully started")
 
 	if err := s.srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Println(fmt.Errorf("http server finished with an err: %w", err))
+		log.Println(fmt.Errorf("http server finished with an error - %s", err))
 	} else {
 		log.Println("http server run method finished")
 	}
@@ -45,7 +45,7 @@ func (s *server) Stop() {
 	log.Println("http server stopping")
 
 	if err := s.srv.Close(); err != nil {
-		log.Println(fmt.Errorf("http server closing failed with err: %w", err))
+		log.Println(fmt.Errorf("http server closing failed with error - %s", err))
 	} else {
 		log.Println("http server successfully stopped")
 	}

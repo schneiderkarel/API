@@ -19,16 +19,16 @@ func main() {
 
 	db, err := sql.Open("postgres", cfg.PostgresDSN)
 	if err != nil {
-		log.Fatalf("cannot open postgres connection: error - %s", err.Error())
+		log.Fatalf("cannot open postgres connection: error - %s", err)
 	}
 	defer func() {
 		if err := db.Close(); err != nil {
-			log.Fatalf("cannot close postgres connection: error - %s", err.Error())
+			log.Fatalf("cannot close postgres connection: error - %s", err)
 		}
 	}()
 
 	if err := db.Ping(); err != nil {
-		log.Fatalf("cannot ping postgres connection: error - %s", err.Error())
+		log.Fatalf("cannot ping postgres connection: error - %s", err)
 	}
 
 	httpServer := httpserver.New(
@@ -51,7 +51,7 @@ func main() {
 		}
 	case err := <-httpServerErrCh:
 		shutdownFn = func() {
-			log.Println(fmt.Errorf("http server unexpectedly stopped: %w", err))
+			log.Println(fmt.Errorf("http server unexpectedly stopped: %s", err))
 		}
 	}
 	if ok := helpers.WithTimeout(shutdownFn, helpers.DefaultTimeout); !ok {
